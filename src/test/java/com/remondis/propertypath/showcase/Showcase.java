@@ -1,5 +1,6 @@
 package com.remondis.propertypath.showcase;
 
+import static java.util.Objects.nonNull;
 import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedList;
@@ -36,6 +37,19 @@ public class Showcase {
     // If a get call returns null when applied to an object, to Optional would be empty.
     String firstCity = firstCityOptional.get();
     assertEquals(firstCity, address1.getCity());
+  }
+
+  public Optional<String> getCity_showcase_without_PropertyPath() {
+    Contract contract = new Contract();
+    if (nonNull(contract.getCompany())) {
+      List<Address> addresses = contract.getCompany()
+          .getAddresses();
+      if (nonNull(addresses) && !addresses.isEmpty()) {
+        Address address = addresses.get(0);
+        return Optional.of(address.getCity());
+      }
+    }
+    return Optional.empty();
   }
 
 }

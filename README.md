@@ -1,17 +1,9 @@
-[![Maven Central](https://img.shields.io/maven-central/v/com.remondis/resample.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.remondis%22%20AND%20a:%22resample%22)
-[ ![Download](https://api.bintray.com/packages/schuettec/maven/com.remondis.resample/images/download.svg) ](https://bintray.com/schuettec/maven/com.remondis.resample/_latestVersion)
-[![Build Status](https://travis-ci.org/remondis-it/resample.svg?branch=develop)](https://travis-ci.org/remondis-it/resample)
-
-# ReSample - A Test Fixture Generator
+# Property Path - Simplifying access to Jave Bean properties
 
 # Table of Contents
 1. [Overview](#overview)
-2. [Features](#features)
-3. [How to use](#how-to-use)
-4. [Suppliers](#suppliers)
-5. [Scope hierarchy](#scope-hierarchy)
-6. [Auto-sampling](#auto-sampling)
-7. [How to contribute](#how-to-contribute)
+2. [Example](#example)
+3. [How to contribute](#how-to-contribute)
 
 ## Overview
 

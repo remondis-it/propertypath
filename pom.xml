@@ -41,7 +41,7 @@
 		<repository>
 			<id>bintray-schuettec-maven</id>
 			<name>schuettec-maven</name>
-			<url>https://api.bintray.com/maven/schuettec/maven/com.remondis:propertypath/;publish=1</url>
+			<url>https://api.bintray.com/maven/schuettec/maven/com.remondis.propertypath/;publish=1</url>
 		</repository>
 	</distributionManagement>
 	<build>

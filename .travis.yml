@@ -1,6 +1,11 @@
 language: java
 script: mvn install
 
+cache:
+  directories:
+  - .autoconf
+  - $HOME/.m2
+
 before_install:
 - chmod +x ./etc/before.sh
 - ./etc/before.sh

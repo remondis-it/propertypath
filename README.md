@@ -1,4 +1,4 @@
-# Property Path - Simplifying access to Jave Bean properties
+# Property Path - Simplifying access to Java Bean properties
 
 # Table of Contents
 1. [Overview](#overview)

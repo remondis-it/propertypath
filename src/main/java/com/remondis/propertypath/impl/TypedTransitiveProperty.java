@@ -5,6 +5,7 @@ import static com.remondis.propertypath.impl.ReflectionUtil.isList;
 import static com.remondis.propertypath.impl.ReflectionUtil.isMap;
 import static com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException.notAValidPropertyPath;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -89,8 +90,11 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
       } else {
         Optional<PropertyDescriptor> property = Properties.getProperties(currentType)
             .stream()
-            .filter(pd -> pd.getReadMethod()
-                .equals(invocation.getMethod()))
+            .filter(pd -> nonNull(pd.getReadMethod()))
+            .filter(pd -> {
+              return pd.getReadMethod()
+                  .equals(invocation.getMethod());
+            })
             .findFirst();
         // check, if the current invocation points to a valid property
         valid = property.isPresent();

@@ -17,8 +17,8 @@ public class C {
     return string;
   }
 
-  public void setC(String c) {
-    this.string = c;
+  public void setString(String string) {
+    this.string = string;
   }
 
   @Override

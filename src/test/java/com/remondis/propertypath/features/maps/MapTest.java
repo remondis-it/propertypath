@@ -10,35 +10,21 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.remondis.propertypath.api.AssertGetter;
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.Getter;
 import com.remondis.propertypath.common.A;
 import com.remondis.propertypath.common.B;
 import com.remondis.propertypath.common.C;
 import com.remondis.propertypath.common.DummyException;
+import com.remondis.propertypath.impl.PropertyPathException;
 
 public class MapTest {
 
-  @Test
+  @Test(expected = PropertyPathException.class)
   public void shouldSuppotGetOrDefault() throws DummyException {
-    Map<String, C> map = new Hashtable<>();
-    map.put("one", new C("string1"));
-    map.put("two", new C("string2"));
     C c3 = new C("string3");
-
-    A a = new A(new B(map));
-    Get<A, String, DummyException> getC3 = Getter.newFor(A.class)
+    Getter.newFor(A.class)
         .evaluate(al -> al.getB()
-            .getcMap()
-            .getOrDefault("three", c3)
-            .getString());
-    Optional<String> cOpt3 = getC3.from(a);
-    assertTrue(cOpt3.isPresent());
-    assertEquals(c3.getString(), cOpt3.get());
-
-    AssertGetter.of(getC3)
-        .assertGetter(al -> al.getB()
             .getcMap()
             .getOrDefault("three", c3)
             .getString());

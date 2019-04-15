@@ -5,6 +5,7 @@ import static com.remondis.propertypath.impl.ReflectionUtil.isList;
 import static com.remondis.propertypath.impl.ReflectionUtil.isMap;
 import static com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException.notAValidPropertyPath;
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -89,8 +90,11 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
       } else {
         Optional<PropertyDescriptor> property = Properties.getProperties(currentType)
             .stream()
-            .filter(pd -> pd.getReadMethod()
-                .equals(invocation.getMethod()))
+            .filter(pd -> nonNull(pd.getReadMethod()))
+            .filter(pd -> {
+              return pd.getReadMethod()
+                  .equals(invocation.getMethod());
+            })
             .findFirst();
         // check, if the current invocation points to a valid property
         valid = property.isPresent();
@@ -106,6 +110,51 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
       }
     } while (iterator.hasNext() && valid);
     return new TypedTransitiveProperty<T, R, E>(sensorType, returnValue, trackedInvocations);
+  }
+
+  @Override
+  public String toString() {
+    return toString(false);
+  }
+
+  public String toString(boolean detailed) {
+    StringBuilder b = new StringBuilder(detailed ? rootType.getName() : rootType.getSimpleName());
+    for (Invocation i : invocations) {
+      b.append(".")
+          .append(i.toString());
+    }
+    return b.toString();
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((invocations == null) ? 0 : invocations.hashCode());
+    result = prime * result + ((rootType == null) ? 0 : rootType.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    TypedTransitiveProperty other = (TypedTransitiveProperty) obj;
+    if (invocations == null) {
+      if (other.invocations != null)
+        return false;
+    } else if (!invocations.equals(other.invocations))
+      return false;
+    if (rootType == null) {
+      if (other.rootType != null)
+        return false;
+    } else if (!rootType.equals(other.rootType))
+      return false;
+    return true;
   }
 
 }

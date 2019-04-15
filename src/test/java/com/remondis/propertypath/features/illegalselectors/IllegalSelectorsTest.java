@@ -1,6 +1,7 @@
 package com.remondis.propertypath.features.illegalselectors;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -12,12 +13,22 @@ import com.remondis.propertypath.impl.PropertyPathException;
 
 public class IllegalSelectorsTest {
 
+  @Test
+  public void shouldIgnoreValueModification() {
+    Person person = new Person("forename", "name", 30, Gender.W,
+        new Address("street", "houseNumber", "zipCode", "city"));
+    String string = Getter.from(person)
+        .evaluate(p -> p.getAddress()
+            .getStreet() + "_Street")
+        .get();
+    assertEquals(string, "street");
+  }
+
   @SuppressWarnings("unlikely-arg-type")
   @Test
   public void shouldHandleIllegalSelectorCalls() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));
-
     assertThatThrownBy(() -> Getter.from(person)
         .evaluate(p -> p.getAddress()
             .equals("Hallo"))).isInstanceOf(PropertyPathException.class)

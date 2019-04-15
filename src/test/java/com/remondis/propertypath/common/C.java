@@ -2,7 +2,7 @@ package com.remondis.propertypath.common;
 
 public class C {
 
-  private String c;
+  private String string;
 
   public C() {
     super();
@@ -10,20 +10,20 @@ public class C {
 
   public C(String c) {
     super();
-    this.c = c;
+    this.string = c;
   }
 
-  public String getC() {
-    return c;
+  public String getString() {
+    return string;
   }
 
-  public void setC(String c) {
-    this.c = c;
+  public void setString(String string) {
+    this.string = string;
   }
 
   @Override
   public String toString() {
-    return "C [c=" + c + "]";
+    return "C [string=" + string + "]";
   }
 
 }

@@ -1,5 +1,7 @@
 package com.remondis.propertypath.impl;
 
+import static java.util.Objects.isNull;
+
 import java.util.Optional;
 
 import com.remondis.propertypath.api.Get;
@@ -11,20 +13,20 @@ import com.remondis.propertypath.impl.exceptions.ZeroInteractionException;
 public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
 
   private Class<I> startType;
-  private PropertyPathWithException<O, I, E> selector;
   private TypedTransitiveProperty<I, O, E> sourceProperty;
 
   public GetImpl(Class<I> startType, PropertyPathWithException<O, I, E> selector) {
     this.startType = startType;
-    this.selector = selector;
     this.sourceProperty = buildTransitiveProperty(startType, selector);
   }
 
   @Override
   public Optional<O> from(I object) throws E {
+    if (isNull(object)) {
+      return Optional.empty();
+    }
     O returnValue = sourceProperty.get(object);
     return Optional.ofNullable(returnValue);
-
   }
 
   /**
@@ -50,6 +52,16 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
       throw new PropertyPathException(
           "The specified property path contained illegal method calls. Only getters and calls to List.get(int) and Map.get(Object) are allowed!",
           e);
+    }
+  }
+
+  @Override
+  public O fromOrDefault(I object, O defaultValue) throws E {
+    Optional<O> optional = from(object);
+    if (optional.isPresent()) {
+      return optional.get();
+    } else {
+      return defaultValue;
     }
   }
 

@@ -7,6 +7,8 @@ import org.junit.Test;
 import com.remondis.propertypath.api.AssertGetter;
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.Getter;
+import com.remondis.propertypath.common.A;
+import com.remondis.propertypath.common.DummyException;
 import com.remondis.propertypath.common.Person;
 
 public class AssertTest {
@@ -20,6 +22,21 @@ public class AssertTest {
     AssertGetter.of(getter)
         .assertGetter(p -> p.getAddress()
             .getStreet());
+  }
+
+  @Test(expected = AssertionError.class)
+  public void shouldDetectDifferentPropertyPathDueToDifferentArguments() throws DummyException {
+    Get<A, String, DummyException> get99 = Getter.newFor(A.class)
+        .evaluate(al -> al.getB()
+            .getCs()
+            .get(99)
+            .getString());
+    AssertGetter.of(get99)
+        .assertGetter(al -> al.getB()
+            .getCs()
+            .get(88)
+            .getString());
+
   }
 
   @Test

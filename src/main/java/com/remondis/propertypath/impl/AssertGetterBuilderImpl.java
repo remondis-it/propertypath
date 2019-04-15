@@ -24,7 +24,7 @@ public class AssertGetterBuilderImpl<I, O, E extends Exception> implements Asser
     if (!actualProperty.equals(expectedProperty)) {
       throw new AssertionError(
           "The expected propertypath does not match the actual property path of this getter:\nExpected: "
-              + expectedProperty.toString(true) + "\nActual:" + actualProperty.toString(true));
+              + expectedProperty.toString(true) + "\n  Actual: " + actualProperty.toString(true));
     }
   }
 

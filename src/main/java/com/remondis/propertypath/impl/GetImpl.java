@@ -12,19 +12,36 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
 
   private Class<I> startType;
   private PropertyPathWithException<O, I, E> selector;
+  private TypedTransitiveProperty<I, O, E> sourceProperty;
 
   public GetImpl(Class<I> startType, PropertyPathWithException<O, I, E> selector) {
     this.startType = startType;
     this.selector = selector;
+    this.sourceProperty = buildTransitiveProperty(startType, selector);
   }
 
   @Override
   public Optional<O> from(I object) throws E {
+    O returnValue = sourceProperty.get(object);
+    return Optional.ofNullable(returnValue);
+
+  }
+
+  /**
+   * @return Returns the {@link TypedTransitiveProperty} used to evaluate asserts.
+   */
+  protected TypedTransitiveProperty<I, O, E> getTransitiveProperty() {
+    return sourceProperty;
+  }
+
+  protected Class<I> getStartType() {
+    return startType;
+  }
+
+  protected static <I, O, E extends Exception> TypedTransitiveProperty<I, O, E> buildTransitiveProperty(
+      Class<I> startType, PropertyPathWithException<O, I, E> selector) {
     try {
-      TypedTransitiveProperty<I, O, E> sourceProperty = InvocationSensor.getTransitiveTypedProperty(startType,
-          selector);
-      O returnValue = sourceProperty.get(object);
-      return Optional.ofNullable(returnValue);
+      return InvocationSensor.getTransitiveTypedProperty(startType, selector);
     } catch (ZeroInteractionException e) {
       throw new PropertyPathException("The specified property path did not interact with the given object.", e);
     } catch (ExceptionInPropertyPath e) {
@@ -34,7 +51,6 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
           "The specified property path contained illegal method calls. Only getters and calls to List.get(int) and Map.get(Object) are allowed!",
           e);
     }
-
   }
 
 }

@@ -1,0 +1,6 @@
+Support for Map.getOrDefault:
+-----------------------------
+
+Map.getOrDefault(...) was not implemented, because the assert of this property path will introduce a dependency
+to the arguments used for Map.getOrDefault(...). When using primitive types, this may not be a problem, but when
+using complex objects, the property path is not easy testable.

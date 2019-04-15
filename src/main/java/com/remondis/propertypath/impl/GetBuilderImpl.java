@@ -13,8 +13,7 @@ public class GetBuilderImpl<I> implements GetBuilder<I> {
   }
 
   @Override
-  public <O, E extends Exception> Get<I, O, E> evaluateWithException(PropertyPathWithException<O, I, E> selector)
-      throws E {
+  public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPathWithException<O, I, E> selector) throws E {
     return new GetImpl<I, O, E>(startType, selector);
   }
 }

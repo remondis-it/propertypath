@@ -63,6 +63,40 @@ public class InvocationSensor<T> {
     }
 
     @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + Arrays.hashCode(args);
+      result = prime * result + ((genericReturnType == null) ? 0 : genericReturnType.hashCode());
+      result = prime * result + ((method == null) ? 0 : method.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Invocation other = (Invocation) obj;
+      if (!Arrays.equals(args, other.args))
+        return false;
+      if (genericReturnType == null) {
+        if (other.genericReturnType != null)
+          return false;
+      } else if (!genericReturnType.equals(other.genericReturnType))
+        return false;
+      if (method == null) {
+        if (other.method != null)
+          return false;
+      } else if (!method.equals(other.method))
+        return false;
+      return true;
+    }
+
+    @Override
     public String toString() {
       return new StringBuilder(getMethod().getName()).append("(")
           .append(Arrays.toString(getArgs())

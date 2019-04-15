@@ -5,8 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -21,41 +19,13 @@ import com.remondis.propertypath.common.DummyException;
 public class ListTest {
 
   @Test
-  public void shouldHandleNoSuchElementInMap() throws DummyException {
-    Map<String, C> map = new Hashtable<>();
-    map.put("one", new C("string1"));
-    map.put("two", new C("string2"));
-
-    A a = new A(new B(map));
-    Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
-            .getcMap()
-            .get("DOES NOT EXIST")
-            .getC());
-    Optional<String> cOpt0 = getC0.from(a);
-    assertFalse(cOpt0.isPresent());
-  }
-
-  @Test
   public void shouldHandleNoSuchElementInList() throws DummyException {
     A a = new A(new B(asList(new C("string1"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
+        .evaluate(al -> al.getB()
             .getCs()
             .get(99)
-            .getC());
-    Optional<String> cOpt0 = getC0.from(a);
-    assertFalse(cOpt0.isPresent());
-  }
-
-  @Test
-  public void shouldHandleNullMap() throws DummyException {
-    A a = new A(new B());
-    Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
-            .getcMap()
-            .get("DOES NOT EXIST")
-            .getC());
+            .getString());
     Optional<String> cOpt0 = getC0.from(a);
     assertFalse(cOpt0.isPresent());
   }
@@ -64,10 +34,10 @@ public class ListTest {
   public void shouldHandleNullList() throws DummyException {
     A a = new A(new B());
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
+        .evaluate(al -> al.getB()
             .getCs()
             .get(0)
-            .getC());
+            .getString());
     Optional<String> cOpt0 = getC0.from(a);
     assertFalse(cOpt0.isPresent());
   }
@@ -76,45 +46,19 @@ public class ListTest {
   public void shouldGetFromList() throws DummyException {
     A a = new A(new B(asList(new C("string1"), new C("string2"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
+        .evaluate(al -> al.getB()
             .getCs()
             .get(0)
-            .getC());
+            .getString());
     Optional<String> cOpt0 = getC0.from(a);
     assertTrue(cOpt0.isPresent());
     assertEquals("string1", cOpt0.get());
 
     Get<A, String, DummyException> getC1 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
+        .evaluate(al -> al.getB()
             .getCs()
             .get(1)
-            .getC());
-    Optional<String> cOpt1 = getC1.from(a);
-    assertTrue(cOpt1.isPresent());
-    assertEquals("string2", cOpt1.get());
-  }
-
-  @Test
-  public void shouldGetFromMap() throws DummyException {
-    Map<String, C> map = new Hashtable<>();
-    map.put("one", new C("string1"));
-    map.put("two", new C("string2"));
-
-    A a = new A(new B(map));
-    Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
-            .getcMap()
-            .get("one")
-            .getC());
-    Optional<String> cOpt0 = getC0.from(a);
-    assertTrue(cOpt0.isPresent());
-    assertEquals("string1", cOpt0.get());
-
-    Get<A, String, DummyException> getC1 = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
-            .getcMap()
-            .get("two")
-            .getC());
+            .getString());
     Optional<String> cOpt1 = getC1.from(a);
     assertTrue(cOpt1.isPresent());
     assertEquals("string2", cOpt1.get());

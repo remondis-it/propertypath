@@ -2,7 +2,7 @@ package com.remondis.propertypath.impl;
 
 import com.remondis.propertypath.api.AssertGetterBuilder;
 import com.remondis.propertypath.api.Get;
-import com.remondis.propertypath.api.PropertyPathWithException;
+import com.remondis.propertypath.api.PropertyPath;
 
 public class AssertGetterBuilderImpl<I, O, E extends Exception> implements AssertGetterBuilder<I, O, E> {
 
@@ -17,7 +17,7 @@ public class AssertGetterBuilderImpl<I, O, E extends Exception> implements Asser
   }
 
   @Override
-  public void assertGetter(PropertyPathWithException<O, I, E> selector) {
+  public void assertGetter(PropertyPath<O, I, E> selector) {
     TypedTransitiveProperty<I, O, E> actualProperty = getter.getTransitiveProperty();
     TypedTransitiveProperty<I, O, E> expectedProperty = GetImpl.buildTransitiveProperty(getter.getStartType(),
         selector);

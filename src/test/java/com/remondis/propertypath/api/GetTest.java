@@ -20,29 +20,6 @@ import com.remondis.propertypath.common.Person;
 public class GetTest {
 
   @Test
-  public void shouldGetFromObject() {
-    Person person = new Person("forename", "name", 30, Gender.W,
-        new Address("street", "houseNumber", "zipCode", "city"));
-
-    Optional<String> streetOpt = Getter.from(person)
-        .evaluate(p -> p.getAddress()
-            .getStreet());
-
-    assertTrue(streetOpt.isPresent());
-    assertEquals("street", streetOpt.get());
-  }
-
-  @Test
-  public void shouldGetFromObjectSupportExceptions() throws DummyException {
-    A a = new A(new BThrowing());
-    assertThatThrownBy(() -> {
-      Getter.from(a)
-          .evaluate(al -> al.getB()
-              .getCs());
-    }).isInstanceOf(DummyException.class);
-  }
-
-  @Test
   public void shouldGetFromType() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));

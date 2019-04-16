@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
-import com.remondis.propertypath.api.PropertyPathWithException;
+import com.remondis.propertypath.api.PropertyPath;
 import com.remondis.propertypath.impl.exceptions.ExceptionInPropertyPath;
 import com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException;
 import com.remondis.propertypath.impl.exceptions.ReflectionException;
@@ -257,7 +257,7 @@ public class InvocationSensor<T> {
    * @throws NotAValidPropertyPathException Thrown if the property path contains illegal calls to unsupported methods.
    */
   public static <R, T, E extends Exception> TypedTransitiveProperty<T, R, E> getTransitiveTypedProperty(
-      Class<T> sensorType, PropertyPathWithException<R, T, E> selector)
+      Class<T> sensorType, PropertyPath<R, T, E> selector)
       throws ZeroInteractionException, ExceptionInPropertyPath, NotAValidPropertyPathException {
     InvocationSensor<T> invocationSensor = new InvocationSensor<T>(sensorType);
     T sensor = invocationSensor.getSensor(true);

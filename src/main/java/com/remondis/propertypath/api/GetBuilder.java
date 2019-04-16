@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * This is the builder stage for specifying a property path.
- * 
+ *
  * @param <I>
  */
 public interface GetBuilder<I> {
@@ -27,7 +27,6 @@ public interface GetBuilder<I> {
    * @param selector A lambda function performing get calls on the specified object to declare the actual property path.
    *        <b>This is not a function operating on real object. So do not manipulate or calculate here!</b>
    * @return Returns the final {@link Get} instance.
-   * @throws E The type of exception the property path may throw at evaluation time.
    */
-  public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector) throws E;
+  public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector);
 }

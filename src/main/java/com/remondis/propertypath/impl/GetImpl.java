@@ -5,7 +5,7 @@ import static java.util.Objects.isNull;
 import java.util.Optional;
 
 import com.remondis.propertypath.api.Get;
-import com.remondis.propertypath.api.PropertyPath;
+import com.remondis.propertypath.api.PropertyPathWithException;
 import com.remondis.propertypath.impl.exceptions.ExceptionInPropertyPath;
 import com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException;
 import com.remondis.propertypath.impl.exceptions.ZeroInteractionException;
@@ -15,7 +15,7 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
   private Class<I> startType;
   private TypedTransitiveProperty<I, O, E> sourceProperty;
 
-  public GetImpl(Class<I> startType, PropertyPath<O, I, E> selector) {
+  public GetImpl(Class<I> startType, PropertyPathWithException<O, I, E> selector) {
     this.startType = startType;
     this.sourceProperty = buildTransitiveProperty(startType, selector);
   }
@@ -41,7 +41,7 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
   }
 
   protected static <I, O, E extends Exception> TypedTransitiveProperty<I, O, E> buildTransitiveProperty(
-      Class<I> startType, PropertyPath<O, I, E> selector) {
+      Class<I> startType, PropertyPathWithException<O, I, E> selector) {
     try {
       return InvocationSensor.getTransitiveTypedProperty(startType, selector);
     } catch (ZeroInteractionException e) {

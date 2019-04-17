@@ -10,20 +10,21 @@ import java.util.Map;
  *
  * @param <I> The type to evaluate a property path on.
  * @param <O> The type of the property value to return.
+ * @param <E> The exception type that may be thrown by the get invocation chain.
  */
 @FunctionalInterface
-public interface PropertyPath<O, I> {
+public interface PropertyPathWithException<O, I, E extends Exception> {
   /**
    * Performs a get-method invocation chain on the specified input object to declare a property path. Only get-method
    * calls and calls to {@link List#get(int)} and {@link Map#get(Object)} are allowed.
    * <p>
    * <b>Please read the explanation of
-   * the property path in {@link GetBuilder#evaluate(PropertyPath)}!</b>
+   * the property path in {@link GetBuilder#evaluate(PropertyPathWithException)}!</b>
    * </p>
    *
    * @param t A proxy object to perform get-calls on. <b>Do not manipulate or calculate here! This is not a function
    *        operating on real objects!</b>
    */
-  O selectProperty(I i);
+  O selectProperty(I i) throws E;
 
 }

@@ -38,7 +38,7 @@ public class MapTest {
 
     A a = new A(new B(map));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getcMap()
             .get("DOES NOT EXIST")
             .getString());
@@ -50,7 +50,7 @@ public class MapTest {
   public void shouldHandleNullMap() throws DummyException {
     A a = new A(new B());
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getcMap()
             .get("DOES NOT EXIST")
             .getString());
@@ -66,7 +66,7 @@ public class MapTest {
 
     A a = new A(new B(map));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getcMap()
             .get("one")
             .getString());
@@ -75,7 +75,7 @@ public class MapTest {
     assertEquals("string1", cOpt0.get());
 
     Get<A, String, DummyException> getC1 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getcMap()
             .get("two")
             .getString());

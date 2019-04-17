@@ -22,7 +22,7 @@ public class ListTest {
   public void shouldHandleNoSuchElementInList() throws DummyException {
     A a = new A(new B(asList(new C("string1"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getCs()
             .get(99)
             .getString());
@@ -34,7 +34,7 @@ public class ListTest {
   public void shouldHandleNullList() throws DummyException {
     A a = new A(new B());
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getCs()
             .get(0)
             .getString());
@@ -46,7 +46,7 @@ public class ListTest {
   public void shouldGetFromList() throws DummyException {
     A a = new A(new B(asList(new C("string1"), new C("string2"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getCs()
             .get(0)
             .getString());
@@ -55,7 +55,7 @@ public class ListTest {
     assertEquals("string1", cOpt0.get());
 
     Get<A, String, DummyException> getC1 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getCs()
             .get(1)
             .getString());

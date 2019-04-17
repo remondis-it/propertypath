@@ -27,7 +27,7 @@ public class AssertTest {
   @Test(expected = AssertionError.class)
   public void shouldDetectDifferentPropertyPathDueToDifferentArguments() throws DummyException {
     Get<A, String, DummyException> get99 = Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
+        .evaluateWithException(al -> al.getB()
             .getCs()
             .get(99)
             .getString());

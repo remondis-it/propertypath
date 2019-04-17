@@ -9,7 +9,7 @@ public class MultipleExceptionsTest {
   @Test
   public void whatHappensIfThereAreDifferenExceptionTypes() throws Exception {
     Get<A, String, Exception> get = Getter.newFor(A.class)
-        .evaluateWithException(a -> a.getB()
+        .evaluate(a -> a.getB()
             .getString());
 
   }

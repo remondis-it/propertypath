@@ -37,7 +37,7 @@ public class GetTest {
   public void shouldGetFromTypeSupportExceptions() throws DummyException {
     A a = new A(new BThrowing());
     Get<A, List<C>, DummyException> getCs = Getter.newFor(A.class)
-        .evaluateWithException(al -> al.getB()
+        .evaluate(al -> al.getB()
             .getCs());
     assertThatThrownBy(() -> {
       getCs.from(a);

@@ -2,7 +2,7 @@ language: java
 script: mvn install
 
 jdk:
-  - oraclejdk11
+  - openjdk11
 
 cache:
   directories:

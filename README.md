@@ -1,5 +1,5 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.remondis/propertypath.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.remondis%22%20AND%20a:%22propertypath%22)
-[ ![Download](https://api.bintray.com/packages/schuettec/maven/com.remondis.propertypath/images/download.svg?version=0.0.3) ](https://bintray.com/schuettec/maven/com.remondis.propertypath/0.0.3/link)
+[ ![Download](https://api.bintray.com/packages/schuettec/maven/com.remondis.propertypath/images/download.svg) ](https://bintray.com/schuettec/maven/com.remondis.propertypath/_latestVersion)
 [![Build Status](https://travis-ci.org/remondis-it/propertypath.svg?branch=develop)](https://travis-ci.org/remondis-it/propertypath)
 
 # Property Path - Simplifying access to Java Bean properties

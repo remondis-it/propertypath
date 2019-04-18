@@ -65,4 +65,47 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
     }
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((sourceProperty == null) ? 0 : sourceProperty.hashCode());
+    result = prime * result + ((startType == null) ? 0 : startType.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    GetImpl other = (GetImpl) obj;
+    if (sourceProperty == null) {
+      if (other.sourceProperty != null)
+        return false;
+    } else if (!sourceProperty.equals(other.sourceProperty))
+      return false;
+    if (startType == null) {
+      if (other.startType != null)
+        return false;
+    } else if (!startType.equals(other.startType))
+      return false;
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return sourceProperty.toString(false);
+  }
+
+  /**
+   * @return Returns a detailed string if specified, otherwise a shorter string is returned.
+   */
+  public String toString(boolean detailed) {
+    return sourceProperty.toString(detailed);
+  }
+
 }

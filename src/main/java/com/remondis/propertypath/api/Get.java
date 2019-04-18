@@ -19,6 +19,10 @@ import java.util.Optional;
  * as long as possible.</b>
  * </p>
  *
+ * <h2>Implementation hints</h2>
+ * The implementation is expected to provide a valid {@link Object#equals(Object)} method. Two getters are considered
+ * equal if their types, property paths and the respective argument values are equal.
+ *
  * @param <I> The type to evaluate a property path on.
  * @param <O> The type of the property value.
  * @param <E> The exception type that may be thrown by the property path.
@@ -45,5 +49,10 @@ public interface Get<I, O, E extends Exception> {
    * @throws E May be thrown by the property path.
    */
   public O fromOrDefault(I object, O defaultValue) throws E;
+
+  /**
+   * @return Returns a detailed string if specified, otherwise a shorter string is returned.
+   */
+  public String toString(boolean detailed);
 
 }

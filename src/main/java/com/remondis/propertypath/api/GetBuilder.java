@@ -28,5 +28,5 @@ public interface GetBuilder<I> {
    *        <b>This is not a function operating on real object. So do not manipulate or calculate here!</b>
    * @return Returns the final {@link Get} instance.
    */
-  public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector) throws E;
+  public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector);
 }

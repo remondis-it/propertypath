@@ -1,6 +1,9 @@
 language: java
 script: mvn install
 
+jdk:
+  - openjdk11
+
 cache:
   directories:
   - .autoconf

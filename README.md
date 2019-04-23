@@ -98,7 +98,7 @@ When declaring a property path the following calls are supported:
 
 ## Why is ... not supported?
 
-This library currently only supports the above method calls in a property path. Other methods are not implemented because this would morph this library into a mocking framework, and that is not the intend.
+This library currently only supports the above method calls in a property path. Other methods are not implemented because this would morph this library into a mocking framework, and that is not the intent.
 
 The method `java.util.Map.getOrDefault(Object, V)` seemed like a good candidate to be implemented and supported in property paths, but using complex objects as key or value in maps introduces a dependency when testing. The arguments in property paths are also checked using equals, so the test must have the exact same arguments which is considered as a strong dependecy.
 

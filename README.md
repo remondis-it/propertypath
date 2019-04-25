@@ -7,9 +7,12 @@
 # Table of Contents
 1. [Overview](#overview)
 2. [Example](#example)
-3. [How to contribute](#how-to-contribute)
+3. [Supported property paths](#supported-property-paths)
+4. [Transforming the result](#transforming-the-result)
+5. [Why is my method not supported](#why-is-my-method-not-supported)
+6. [How to contribute](#how-to-contribute)
 
-## Overview
+# Overview
 
 This library was build to simplify the access of transitive Java Bean properties.
 
@@ -49,7 +52,7 @@ The result is provided by an Optional holding a value if available.
 This is supported even for Lists and Maps.
 
 
-### Example
+# Example
 
 The following example demonstrates how to generate a sample instance of `Person`.
 
@@ -119,7 +122,7 @@ In case the property path evaluates to a null value, the transform function will
 A transform function may return a null value. In this case an empty `java.util.Optional` is the result.
 
 
-## Why is ... not supported?
+# Why is my method not supported?
 
 This library currently only supports the above method calls in a property path. Other methods are not implemented because this would morph this library into a mocking framework, and that is not the intent.
 

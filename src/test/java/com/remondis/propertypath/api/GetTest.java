@@ -20,7 +20,7 @@ import com.remondis.propertypath.common.Person;
 public class GetTest {
 
   @Test
-  public void shouldGetFromType() {
+  public void shouldGet() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));
 
@@ -34,7 +34,7 @@ public class GetTest {
   }
 
   @Test
-  public void shouldGetFromTypeSupportExceptions() throws DummyException {
+  public void shouldSupportExceptions() throws DummyException {
     A a = new A(new BThrowing());
     Get<A, List<C>, DummyException> getCs = Getter.newFor(A.class)
         .evaluate(al -> al.getB()

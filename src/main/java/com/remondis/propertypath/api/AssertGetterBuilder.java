@@ -11,4 +11,5 @@ public interface AssertGetterBuilder<I, O, E extends Exception> {
    * @param selector The expected property path.
    */
   public void assertGetter(PropertyPath<O, I, E> selector);
+
 }

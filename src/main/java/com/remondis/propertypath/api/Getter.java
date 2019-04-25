@@ -1,5 +1,7 @@
 package com.remondis.propertypath.api;
 
+import static java.util.Objects.requireNonNull;
+
 import com.remondis.propertypath.impl.GetBuilderImpl;
 
 /**
@@ -36,6 +38,7 @@ public final class Getter {
    * @return Returns a builder for further configuration.
    */
   public static <I, O> GetBuilder<I> newFor(Class<I> startType) {
+    requireNonNull(startType, "Type must not be null.");
     return new GetBuilderImpl<I>(startType);
   }
 

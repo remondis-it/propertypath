@@ -21,7 +21,8 @@ import java.util.Optional;
  *
  * <h2>Implementation hints</h2>
  * The implementation is expected to provide a valid {@link Object#equals(Object)} method. Two getters are considered
- * equal if their types, property paths and the respective argument values are equal.
+ * equal if their types, property paths and the respective argument values are equal. <b>The optional transform function
+ * cannot be compared, so this must be excluded from the equals/hashCode compuation.</b>
  *
  * @param <I> The type to evaluate a property path on.
  * @param <O> The type of the property value.

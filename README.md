@@ -96,6 +96,29 @@ When declaring a property path the following calls are supported:
 - java.util.List.get(int)
 - java.util.Map.get(Object)
 
+# Transforming the result
+
+Since version `0.0.6` the property path may specify a function that transforms the result value of the property path to a different type.
+Due to the fact that a property path may not perform computations, the transform function provides a way to apply computation after evaluating the property path.
+
+## Example
+
+Assume you want to get the length of the street name for a given person you can write the following:
+```
+Optional<Integer> optStreetLength = Getter.newFor(Person.class)
+    .evaluateAnd(p -> p.getAddress()
+        .getStreet())
+    .apply(String::length)
+    .from(person);
+```
+
+If the property path evaluates to a non-null value, the transform function (`String::length`) is applied to the result and reduces the street name to the number of characters. The result can be accessed via the returned `java.util.Optional`.
+
+In case the property path evaluates to a null value, the transform function will not be applied.
+
+A transform function may return a null value. In this case an empty `java.util.Optional` is the result.
+
+
 ## Why is ... not supported?
 
 This library currently only supports the above method calls in a property path. Other methods are not implemented because this would morph this library into a mocking framework, and that is not the intent.

@@ -1,23 +1,33 @@
 package com.remondis.propertypath.impl;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.remondis.propertypath.api.Get;
+import com.remondis.propertypath.api.GetAndApply;
 import com.remondis.propertypath.api.PropertyPath;
 import com.remondis.propertypath.impl.exceptions.ExceptionInPropertyPath;
 import com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException;
 import com.remondis.propertypath.impl.exceptions.ZeroInteractionException;
 
-public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
+public final class GetImpl<I, X, O, E extends Exception> implements Get<I, O, E>, GetAndApply<I, X, O, E> {
 
   private Class<I> startType;
-  private TypedTransitiveProperty<I, O, E> sourceProperty;
+  private TypedTransitiveProperty<I, X, E> sourceProperty;
+  private Function<X, O> transformation;
 
-  public GetImpl(Class<I> startType, PropertyPath<O, I, E> selector) {
+  public GetImpl(Class<I> startType, PropertyPath<X, I, E> selector) {
     this.startType = startType;
     this.sourceProperty = buildTransitiveProperty(startType, selector);
+  }
+
+  public GetImpl(Class<I> startType, PropertyPath<X, I, E> selector, Function<X, O> transformation) {
+    this.startType = startType;
+    this.sourceProperty = buildTransitiveProperty(startType, selector);
+    this.transformation = transformation;
   }
 
   @Override
@@ -25,14 +35,36 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
     if (isNull(object)) {
       return Optional.empty();
     }
-    O returnValue = sourceProperty.get(object);
-    return Optional.ofNullable(returnValue);
+    X evaluationValue = sourceProperty.get(object);
+    if (isNull(evaluationValue)) {
+      return Optional.empty();
+    } else {
+      Function<X, O> transformation = selectTransformFunction();
+      O returnValue = transformation.apply(evaluationValue);
+      return Optional.ofNullable(returnValue);
+    }
+  }
+
+  /**
+   * @return Selects a transform function to be applied on the property path evaluation. If no transform function was
+   *         set, a type conversion from X->O must be performed.
+   */
+  @SuppressWarnings("unchecked")
+  private Function<X, O> selectTransformFunction() {
+    // If no transformation was set, perform a type conversion.
+    Function<X, O> transformation = null;
+    if (isNull(this.transformation)) {
+      transformation = (x) -> (O) x;
+    } else {
+      transformation = this.transformation;
+    }
+    return transformation;
   }
 
   /**
    * @return Returns the {@link TypedTransitiveProperty} used to evaluate asserts.
    */
-  protected TypedTransitiveProperty<I, O, E> getTransitiveProperty() {
+  protected TypedTransitiveProperty<I, X, E> getTransitiveProperty() {
     return sourceProperty;
   }
 
@@ -40,8 +72,8 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
     return startType;
   }
 
-  protected static <I, O, E extends Exception> TypedTransitiveProperty<I, O, E> buildTransitiveProperty(
-      Class<I> startType, PropertyPath<O, I, E> selector) {
+  protected static <I, X, E extends Exception> TypedTransitiveProperty<I, X, E> buildTransitiveProperty(
+      Class<I> startType, PropertyPath<X, I, E> selector) {
     try {
       return InvocationSensor.getTransitiveTypedProperty(startType, selector);
     } catch (ZeroInteractionException e) {
@@ -63,6 +95,10 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
     } else {
       return defaultValue;
     }
+  }
+
+  public boolean hasTransformFunction() {
+    return nonNull(transformation);
   }
 
   @Override
@@ -104,6 +140,7 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
   /**
    * @return Returns a detailed string if specified, otherwise a shorter string is returned.
    */
+  @Override
   public String toString(boolean detailed) {
     return sourceProperty.toString(detailed);
   }

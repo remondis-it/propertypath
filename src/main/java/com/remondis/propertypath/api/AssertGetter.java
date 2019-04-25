@@ -9,6 +9,7 @@ import com.remondis.propertypath.impl.AssertGetterBuilderImpl;
  * explaining the differences.
  */
 public class AssertGetter {
+
   /**
    * Creates a new builder to assert the property path of a specified {@link Get} instance.
    *
@@ -16,6 +17,17 @@ public class AssertGetter {
    * @return Returns a builder for further configuration.
    */
   public static <I, O, E extends Exception> AssertGetterBuilder<I, O, E> of(Get<I, O, E> getter) {
+    return new AssertGetterBuilderImpl<I, O, O, E>(getter);
+  }
+
+  /**
+   * Creates a new builder to assert the property path of a specified {@link Get} instance.
+   *
+   * @param getter The {@link Get} instance under test.
+   * @return Returns a builder for further configuration.
+   */
+  public static <I, X, O, E extends Exception> AssertGetterAndApplyBuilder<I, X, O, E> of(
+      GetAndApply<I, X, O, E> getter) {
     return new AssertGetterBuilderImpl<>(getter);
   }
 }

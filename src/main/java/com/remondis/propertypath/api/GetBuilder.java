@@ -29,4 +29,12 @@ public interface GetBuilder<I> {
    * @return Returns the final {@link Get} instance.
    */
   public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector);
+
+  /**
+   * Works exactly like {@link #evaluate(PropertyPath)} but expects a transformation function to be specified on the
+   * returned builder. The function will be applied to the result of the property path evaluation, <b>but only if the
+   * property path evaluates to a non-null</b> value. If the specified transform function itself returns
+   * <code>null</code> the property path evaluates to no value.
+   */
+  public <X, E extends Exception> ApplyBuilder<X, I, E> evaluateAnd(PropertyPath<X, I, E> selector);
 }

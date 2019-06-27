@@ -15,6 +15,10 @@ public interface ApplyBuilder<X, I, E extends Exception> {
   /**
    * Specifies a function that is applied to the evaluation result of the property path. <b>The function will only be
    * applied in case the property path evaluates to a non-null value.</b>
+   * 
+   * <p>
+   * If the function returns <code>null</code> the property path will not have a value.
+   * </p>
    *
    * @param transformation The function to transform the property path result value.
    * @return Returns the {@link Get} instance.

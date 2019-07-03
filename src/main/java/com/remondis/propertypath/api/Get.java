@@ -1,6 +1,7 @@
 package com.remondis.propertypath.api;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * This class represents a getter that can be evaluated on a real object instance of a matching type. The getter returns
@@ -22,7 +23,7 @@ import java.util.Optional;
  * <h2>Implementation hints</h2>
  * The implementation is expected to provide a valid {@link Object#equals(Object)} method. Two getters are considered
  * equal if their types, property paths and the respective argument values are equal. <b>The optional transform function
- * cannot be compared, so this must be excluded from the equals/hashCode compuation.</b>
+ * cannot be compared, so this must be excluded from the equals/hashCode computation.</b>
  *
  * @param <I> The type to evaluate a property path on.
  * @param <O> The type of the property value.
@@ -50,6 +51,8 @@ public interface Get<I, O, E extends Exception> {
    * @throws E May be thrown by the property path.
    */
   public O fromOrDefault(I object, O defaultValue) throws E;
+
+  public <X> GetAndApply<I, O, X, E> andApply(Function<O, X> mapping);
 
   /**
    * @return Returns a detailed string if specified, otherwise a shorter string is returned.

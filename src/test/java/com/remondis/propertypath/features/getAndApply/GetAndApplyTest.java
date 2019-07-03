@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import com.remondis.propertypath.api.AssertGetter;
+import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.GetAndApply;
 import com.remondis.propertypath.api.Getter;
 import com.remondis.propertypath.common.Address;
@@ -24,9 +25,9 @@ public class GetAndApplyTest {
         new Address("street", "houseNumber", "zipCode", "city"));
 
     Optional<String> opt = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply((something) -> (String) null)
+        .andApply((something) -> (String) null)
         .from(person);
     assertFalse(opt.isPresent());
   }
@@ -39,9 +40,9 @@ public class GetAndApplyTest {
     String expectedStreet = "expectedStreet";
 
     Optional<String> opt = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply((something) -> expectedStreet)
+        .andApply((something) -> expectedStreet)
         .from(person);
     assertTrue(opt.isPresent());
     assertEquals(expectedStreet, opt.get());
@@ -49,25 +50,25 @@ public class GetAndApplyTest {
 
   @Test
   public void shouldAssertHappyPath() {
-    GetAndApply<Person, String, Integer, RuntimeException> getAndApply = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+    GetAndApply<Person, String, Integer, RuntimeException> getter = Getter.newFor(Person.class)
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply(String::length);
+        .andApply(String::length);
 
-    AssertGetter.of(getAndApply)
-        .assertGetterWithTransform(p -> p.getAddress()
+    AssertGetter.of(getter)
+        .assertGetter(p -> p.getAddress()
             .getStreet());
   }
 
   @Test
   public void shouldFailOnNotMatchingPropertyPath() {
     GetAndApply<Person, String, Integer, RuntimeException> getAndApply = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply(String::length);
+        .andApply(String::length);
 
     assertThatThrownBy(() -> AssertGetter.of(getAndApply)
-        .assertGetterWithTransform(p -> p.getAddress()
+        .assertGetter(p -> p.getAddress()
             .getHouseNumber())).isInstanceOf(AssertionError.class);
   }
 
@@ -77,10 +78,10 @@ public class GetAndApplyTest {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address(expectedStreet, "houseNumber", "zipCode", "city"));
 
-    GetAndApply<Person, String, Integer, RuntimeException> getAndApply = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+    Get<Person, Integer, RuntimeException> getAndApply = Getter.newFor(Person.class)
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply(String::length);
+        .andApply(String::length);
 
     Optional<Integer> optStringLength = getAndApply.from(person);
 
@@ -93,9 +94,9 @@ public class GetAndApplyTest {
     Person person = new Person("forename", "name", 30, Gender.W, new Address(null, "houseNumber", "zipCode", "city"));
 
     Optional<Integer> optStringLength = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply(String::length)
+        .andApply(String::length)
         .from(person);
 
     assertFalse(optStringLength.isPresent());
@@ -106,9 +107,9 @@ public class GetAndApplyTest {
     Person person = new Person("forename", "name", 30, Gender.W, null);
 
     Optional<Integer> optStringLength = Getter.newFor(Person.class)
-        .evaluateAnd(p -> p.getAddress()
+        .evaluate(p -> p.getAddress()
             .getStreet())
-        .apply(String::length)
+        .andApply(String::length)
         .from(person);
 
     assertFalse(optStringLength.isPresent());

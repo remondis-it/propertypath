@@ -26,8 +26,8 @@ public class AssertGetter {
    * @param getter The {@link Get} instance under test.
    * @return Returns a builder for further configuration.
    */
-  public static <I, X, O, E extends Exception> AssertGetterAndApplyBuilder<I, X, O, E> of(
-      GetAndApply<I, X, O, E> getter) {
-    return new AssertGetterBuilderImpl<>(getter);
+  public static <I, O, T, E extends Exception> AssertGetterAndApplyBuilder<I, O, T, E> of(
+      GetAndApply<I, O, T, E> getter) {
+    return new AssertGetterBuilderImpl<I, O, T, E>(getter);
   }
 }

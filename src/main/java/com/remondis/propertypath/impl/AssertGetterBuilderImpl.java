@@ -6,25 +6,36 @@ import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.GetAndApply;
 import com.remondis.propertypath.api.PropertyPath;
 
-public class AssertGetterBuilderImpl<I, X, O, E extends Exception>
-    implements AssertGetterBuilder<I, O, E>, AssertGetterAndApplyBuilder<I, X, O, E> {
+public class AssertGetterBuilderImpl<I, O, T, E extends Exception>
+    implements AssertGetterBuilder<I, O, E>, AssertGetterAndApplyBuilder<I, O, T, E> {
 
-  private GetImpl<I, X, O, E> getter;
+  private GetImpl<I, O, E> getter;
 
   public AssertGetterBuilderImpl(Get<I, O, E> getter) {
-    // This time we are impl-specific.
-    if (!(getter instanceof GetImpl)) {
-      throw new IllegalArgumentException("The type of getter instance is not supported. Needs to be GetImpl.");
-    }
-    this.getter = (GetImpl<I, X, O, E>) getter;
+    checkGetImpl(getter);
+    this.getter = (GetImpl<I, O, E>) getter;
   }
 
-  public AssertGetterBuilderImpl(GetAndApply<I, X, O, E> getter) {
+  private void checkGetImpl(Get<I, O, E> getter) {
     // This time we are impl-specific.
     if (!(getter instanceof GetImpl)) {
       throw new IllegalArgumentException("The type of getter instance is not supported. Needs to be GetImpl.");
     }
-    this.getter = (GetImpl<I, X, O, E>) getter;
+  }
+
+  public AssertGetterBuilderImpl(GetAndApply<I, O, T, E> getter) {
+    checkGetAndApply(getter);
+    GetAndApplyImpl<I, O, T, E> impl = (GetAndApplyImpl<I, O, T, E>) getter;
+    Get<I, O, E> originalGetter = impl.getGetter();
+    checkGetImpl(originalGetter);
+    this.getter = (GetImpl<I, O, E>) originalGetter;
+  }
+
+  private void checkGetAndApply(GetAndApply<I, O, T, E> getter) {
+    // This time we are impl-specific.
+    if (!(getter instanceof GetAndApplyImpl)) {
+      throw new IllegalArgumentException("The type of getter instance is not supported. Needs to be GetAndApplyImpl.");
+    }
   }
 
   @Override
@@ -40,16 +51,6 @@ public class AssertGetterBuilderImpl<I, X, O, E extends Exception>
       throw new AssertionError(
           "The expected propertypath does not match the actual property path of this getter:\nExpected: "
               + expectedProperty.toString(true) + "\n  Actual: " + actualProperty.toString(true));
-    }
-  }
-
-  @Override
-  public void assertGetterWithTransform(PropertyPath<X, I, E> selector) {
-    assertPropertyPath(selector);
-
-    if (!getter.hasTransformFunction()) {
-      throw new AssertionError(
-          "The getter was expected to have a transformation function specified, but none was set.");
     }
   }
 

@@ -11,6 +11,7 @@
 4. [Transforming the result](#transforming-the-result)
 5. [Why is my method not supported](#why-is-my-method-not-supported)
 6. [How to contribute](#how-to-contribute)
+7. [Migration guide](#migration-guide)
 
 # Overview
 
@@ -133,3 +134,9 @@ Please refer to the project's [contribution guide](CONTRIBUTE.md)
 
 
 
+# Migration guide
+
+## Migration from 0.0.x to 0.1.x
+
+Due to a JDK 8 bug related to type inference of generic exception type variables the API was restructured.
+You may have to change code if you used the apply-feature but the changes are minimal ;)

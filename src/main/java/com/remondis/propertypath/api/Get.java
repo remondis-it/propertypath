@@ -52,6 +52,14 @@ public interface Get<I, O, E extends Exception> {
    */
   public O fromOrDefault(I object, O defaultValue) throws E;
 
+  /**
+   * Specifies a mapping function that is applied if the getter returned a non-null value. The mapping function can be
+   * used for calculations or type conversions.
+   *
+   * @param <X> The new return type of the getter after applying the mapping function.
+   * @param mapping The mapping function - only applied if the getter has a non-null return value.
+   * @return Returns a new object for further configuration.
+   */
   public <X> GetAndApply<I, O, X, E> andApply(Function<O, X> mapping);
 
   /**

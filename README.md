@@ -136,6 +136,16 @@ Please refer to the project's [contribution guide](CONTRIBUTE.md)
 
 # Migration guide
 
+## Migration from 0.0.x to 0.2.x
+
+The mapping function feature was extended to support two strategies: Apply mapping function
+- if value is present
+- always
+
+When applying mapping functions with strategy 'always', the mapping function itself can decide whether the property path should return a value, even if the property path does not evaluate to a non-null value.
+
+The assertion API was also extended to specify expectations on the if-present-strategy. Therefore a few changes are necessary when migrating to this version. Basically the `.andApply` should be replaced by `.andApplyIfPresent` (and usages of the assert API accordingly) if your logic requires it.
+
 ## Migration from 0.0.x to 0.1.x
 
 Due to a JDK 8 bug related to type inference of generic exception type variables the API was restructured.

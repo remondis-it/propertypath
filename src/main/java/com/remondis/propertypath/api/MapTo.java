@@ -38,6 +38,19 @@ public class MapTo {
   }
 
   /**
+   * @param <S> The input type
+   * @param <T> The output type
+   * @param mapping The mapping function, only applied if the input is non-null.
+   * @param defaultValue The default value to return if the input is null.
+   * @return Returns the specified default value, if the input value is <code>null</code>, otherwise the mapping
+   *         function is
+   *         applied to the input.
+   */
+  public static <S, T> Function<S, T> defaultOr(Function<S, T> mapping, T defaultValue) {
+    return s -> isNull(s) ? defaultValue : mapping.apply(s);
+  }
+
+  /**
    * @param <S> The collection's element type.
    * @param <C> The collection type
    * @return Returns a mapping function, that maps to {@link Collections#emptyList()} if the input is <code>null</code>.

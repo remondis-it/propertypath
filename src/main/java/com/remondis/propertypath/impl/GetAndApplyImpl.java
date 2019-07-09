@@ -11,10 +11,12 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
 
   private Get<I, O, E> getter;
   private Function<O, T> mapping;
+  private boolean applyIfPresent;
 
-  public GetAndApplyImpl(Get<I, O, E> getter, Function<O, T> mapping) {
+  public GetAndApplyImpl(Get<I, O, E> getter, Function<O, T> mapping, boolean applyIfPresent) {
     this.getter = getter;
     this.mapping = mapping;
+    this.applyIfPresent = applyIfPresent;
   }
 
   @Override
@@ -22,8 +24,20 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
     return new GetWithoutExceptionImpl<I, T>(this);
   }
 
+  boolean isApplyIfPresent() {
+    return applyIfPresent;
+  }
+
+  @SuppressWarnings("unchecked")
   Get<I, O, E> getGetter() {
-    return getter;
+    if (getter instanceof GetImpl) {
+      return getter;
+    } else if (getter instanceof GetAndApplyImpl) {
+      GetAndApplyImpl getAndApplyImpl = (GetAndApplyImpl) getter;
+      return getAndApplyImpl.getGetter();
+    } else {
+      throw new IllegalStateException("Cannot determine original getter. This is an implementation fault.");
+    }
   }
 
   Function<O, T> getMapping() {
@@ -34,9 +48,15 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
   public Optional<T> from(I object) throws E {
     Optional<O> opt = getter.from(object);
     if (opt.isPresent()) {
-      return Optional.ofNullable(mapping.apply(opt.get()));
+      T mappedValue = mapping.apply(opt.get());
+      return Optional.ofNullable(mappedValue);
     } else {
-      return Optional.empty();
+      if (applyIfPresent) {
+        return Optional.empty();
+      } else {
+        T mappedValue = mapping.apply(null);
+        return Optional.ofNullable(mappedValue);
+      }
     }
   }
 
@@ -51,8 +71,13 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
   }
 
   @Override
+  public <X> GetAndApply<I, T, X, E> andApplyIfPresent(Function<T, X> mapping) {
+    return new GetAndApplyImpl<I, T, X, E>(this, mapping, true);
+  }
+
+  @Override
   public <X> GetAndApply<I, T, X, E> andApply(Function<T, X> mapping) {
-    return new GetAndApplyImpl<I, T, X, E>(this, mapping);
+    return new GetAndApplyImpl<I, T, X, E>(this, mapping, false);
   }
 
   @Override

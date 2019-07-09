@@ -2,6 +2,12 @@ package com.remondis.propertypath.api;
 
 import static java.util.Objects.isNull;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -29,5 +35,53 @@ public class MapTo {
    */
   public static <S, T> Function<S, T> nullOr(Function<S, T> mapping) {
     return s -> isNull(s) ? null : mapping.apply(s);
+  }
+
+  /**
+   * @param <S> The collection's element type.
+   * @param <C> The collection type
+   * @return Returns a mapping function, that maps to {@link Collections#emptyList()} if the input is <code>null</code>.
+   */
+  public static <S, C extends List<? super S>> Function<C, List<? super S>> emptyListIfNull() {
+    return collection -> isNull(collection) ? Collections.emptyList() : collection;
+  }
+
+  /**
+   * @param <S> The collection's element type.
+   * @param <C> The collection type
+   * @return Returns a mapping function, that maps to {@link Collections#emptyMap()} if the input is <code>null</code>.
+   */
+  public static <S, T, C extends Map<? super S, ? super T>> Function<C, Map<? super S, ? super T>> emptyMapIfNull() {
+    return collection -> isNull(collection) ? Collections.emptyMap() : collection;
+  }
+
+  /**
+   * @param <S> The collection's element type.
+   * @param <C> The collection type
+   * @return Returns a mapping function, that maps to {@link Collections#emptyEnumeration()} if the input is
+   *         <code>null</code>.
+   */
+  public static <S, C extends Enumeration<? super S>> Function<C, Enumeration<? super S>> emptyEnumerationIfNull() {
+    return collection -> isNull(collection) ? Collections.emptyEnumeration() : collection;
+  }
+
+  /**
+   * @param <S> The collection's element type.
+   * @param <C> The collection type
+   * @return Returns a mapping function, that maps to {@link Collections#emptyIterator()} if the input is
+   *         <code>null</code>.
+   */
+  public static <S, C extends Iterator<? super S>> Function<C, Iterator<? super S>> emptyIteratorIfNull() {
+    return collection -> isNull(collection) ? Collections.emptyIterator() : collection;
+  }
+
+  /**
+   * @param <S> The collection's element type.
+   * @param <C> The collection type
+   * @return Returns a mapping function, that maps to {@link Collections#emptyListIterator()} if the input is
+   *         <code>null</code>.
+   */
+  public static <S, C extends ListIterator<? super S>> Function<C, Iterator<? super S>> emptyListIteratorIfNull() {
+    return collection -> isNull(collection) ? Collections.emptyListIterator() : collection;
   }
 }

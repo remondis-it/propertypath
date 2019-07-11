@@ -1,5 +1,7 @@
 package com.remondis.propertypath.impl;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -72,11 +74,13 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
 
   @Override
   public <X> GetAndApply<I, T, X, E> andApplyIfPresent(Function<T, X> mapping) {
+    requireNonNull(mapping, "The mapping function must not be null.");
     return new GetAndApplyImpl<I, T, X, E>(this, mapping, true);
   }
 
   @Override
   public <X> GetAndApply<I, T, X, E> andApply(Function<T, X> mapping) {
+    requireNonNull(mapping, "The mapping function must not be null.");
     return new GetAndApplyImpl<I, T, X, E>(this, mapping, false);
   }
 
@@ -89,6 +93,7 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + (applyIfPresent ? 1231 : 1237);
     result = prime * result + ((getter == null) ? 0 : getter.hashCode());
     return result;
   }
@@ -102,6 +107,8 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
     if (getClass() != obj.getClass())
       return false;
     GetAndApplyImpl other = (GetAndApplyImpl) obj;
+    if (applyIfPresent != other.applyIfPresent)
+      return false;
     if (getter == null) {
       if (other.getter != null)
         return false;

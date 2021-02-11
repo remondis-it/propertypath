@@ -120,4 +120,9 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
     return sourceProperty.toString(detailed);
   }
 
+  @Override
+  public String toPath() {
+    return sourceProperty.toPath();
+  }
+
 }

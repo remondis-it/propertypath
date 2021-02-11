@@ -1,5 +1,6 @@
 package com.remondis.propertypath.impl;
 
+import java.beans.Introspector;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -9,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import com.remondis.propertypath.impl.InvocationSensor.Invocation;
 
 /**
  * This is a util class that provides useful reflective methods. <b>Intended for internal use only!</b>.
@@ -186,4 +189,40 @@ class ReflectionUtil {
     return Map.class.isAssignableFrom(returnType);
   }
 
+  /**
+   * Returns the name of a property represented with either a getter or setter method.
+   *
+   * @param method The getter or setter method.
+   * @return Returns the name of the property.
+   */
+  static String toPropertyName(Invocation invocation) {
+    Method method = invocation.getMethod();
+    String name = method.getName();
+    if (isBoolGetter(method)) {
+      return firstCharacterToLowerCase(name.substring(2, name.length()));
+    } else {
+      if (isGetterWithArgumentSupport(method)) {
+        // Use the default implementation to convert property names correctly.
+        // Support list/map arguments
+        if (isList(method.getDeclaringClass())) {
+          String argument = invocation.getArgs()[0].toString();
+          return "[" + argument + "]";
+        } else {
+          return Introspector.decapitalize(name.substring(3, name.length()));
+        }
+      } else {
+        throw new IllegalArgumentException("The specified method is neither a getter nor a setter method.");
+      }
+    }
+  }
+
+  private static String firstCharacterToLowerCase(String input) {
+    char[] c = input.toCharArray();
+    c[0] = Character.toLowerCase(c[0]);
+    return new String(c);
+  }
+
+  static boolean hasArguments(Method method) {
+    return method.getParameterCount() != 0;
+  }
 }

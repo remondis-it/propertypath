@@ -67,4 +67,9 @@ public interface Get<I, O, E extends Exception> {
    */
   public String toString(boolean detailed);
 
+  /**
+   * @return Returns a JSON-like property path. Example: <tt>a.b.cs[0].d</tt>
+   */
+  public String toPath();
+
 }

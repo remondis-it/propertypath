@@ -3,6 +3,7 @@ package com.remondis.propertypath.impl;
 import static com.remondis.propertypath.impl.PropertyPathException.accessError;
 import static com.remondis.propertypath.impl.ReflectionUtil.isList;
 import static com.remondis.propertypath.impl.ReflectionUtil.isMap;
+import static com.remondis.propertypath.impl.ReflectionUtil.toPropertyName;
 import static com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException.notAValidPropertyPath;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -122,6 +123,20 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
     for (Invocation i : invocations) {
       b.append(".")
           .append(i.toString());
+    }
+    return b.toString();
+  }
+
+  public String toPath() {
+    StringBuilder b = new StringBuilder();
+    for (int i = 0; i < invocations.size(); i++) {
+      Invocation invocation = invocations.get(i);
+      b.append(toPropertyName(invocation));
+      // If this is a collection then skip "." for index
+      if (!isList(invocation.getMethod()
+          .getReturnType()) && i + 1 < invocations.size()) {
+        b.append(".");
+      }
     }
     return b.toString();
   }

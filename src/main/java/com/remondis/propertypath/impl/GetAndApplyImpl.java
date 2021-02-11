@@ -61,6 +61,11 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
   }
 
   @Override
+  public String toPath() {
+    return getter.toPath();
+  }
+
+  @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;

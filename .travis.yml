@@ -19,3 +19,5 @@ deploy:
   script: mvn deploy
   on:
     branch: master
+after_deploy:
+  - ./etc/after.sh

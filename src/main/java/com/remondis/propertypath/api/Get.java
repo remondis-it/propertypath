@@ -53,11 +53,32 @@ public interface Get<I, O, E extends Exception> {
   public O fromOrDefault(I object, O defaultValue) throws E;
 
   /**
-   * Specifies a mapping function that is applied if the getter returned a non-null value. The mapping function can be
-   * used for calculations or type conversions.
+   * Specifies a mapping function that is only applied to the result of the getter if a non-null value is present.
    *
    * @param <X> The new return type of the getter after applying the mapping function.
-   * @param mapping The mapping function - only applied if the getter has a non-null return value.
+   * @param mapping The mapping function - <b>only</b> applied, if the getter has a non-null return value.
+   * @return Returns a new object for further configuration.
+   */
+  public <X> GetAndApply<I, O, X, E> andApplyIfPresent(Function<O, X> mapping);
+
+  /**
+   * Specifies a mapping function that is applied to the result of the getter. The mapping function can be
+   * used for calculations or type conversions.
+   *
+   * <h2>Mapping functions</h2>
+   * <p>
+   * In contrast to earlier versions, the mapping function is always invoked, even if the getter returns
+   * <code>null</code>. This way, the mapping function can decide that the getter has a value, even if the property path
+   * would not return one.
+   * </p>
+   * <p>
+   * The mapping function must be implemented <code>null</code>-safe. The contract is: if the mapping function returns
+   * <code>null</code> the property path is considered to have no value, otherwise the return value of the mapping
+   * function is used as return value.
+   * </p>
+   *
+   * @param <X> The new return type of the getter after applying the mapping function.
+   * @param mapping The mapping function - <b>always</b> applied, even if the getter has a non-null return value.
    * @return Returns a new object for further configuration.
    */
   public <X> GetAndApply<I, O, X, E> andApply(Function<O, X> mapping);

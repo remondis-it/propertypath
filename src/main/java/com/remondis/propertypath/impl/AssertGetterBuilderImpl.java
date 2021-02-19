@@ -1,13 +1,11 @@
 package com.remondis.propertypath.impl;
 
-import com.remondis.propertypath.api.AssertGetterAndApplyBuilder;
 import com.remondis.propertypath.api.AssertGetterBuilder;
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.GetAndApply;
 import com.remondis.propertypath.api.PropertyPath;
 
-public class AssertGetterBuilderImpl<I, O, T, E extends Exception>
-    implements AssertGetterBuilder<I, O, E>, AssertGetterAndApplyBuilder<I, O, T, E> {
+public class AssertGetterBuilderImpl<I, O, T, E extends Exception> implements AssertGetterBuilder<I, O, E> {
 
   private GetImpl<I, O, E> getter;
 
@@ -40,13 +38,12 @@ public class AssertGetterBuilderImpl<I, O, T, E extends Exception>
 
   @Override
   public void assertGetter(PropertyPath<O, I, E> selector) {
-    assertPropertyPath(selector);
+    assertPropertyPath(getter.getTransitiveProperty(), getter.getStartType(), selector);
   }
 
-  private void assertPropertyPath(PropertyPath<?, I, E> selector) throws AssertionError {
-    TypedTransitiveProperty<I, ?, E> actualProperty = getter.getTransitiveProperty();
-    TypedTransitiveProperty<I, ?, E> expectedProperty = GetImpl.buildTransitiveProperty(getter.getStartType(),
-        selector);
+  static <I, E extends Exception> void assertPropertyPath(TypedTransitiveProperty<I, ?, E> actualProperty,
+      Class<I> startType, PropertyPath<?, I, E> selector) throws AssertionError {
+    TypedTransitiveProperty<I, ?, E> expectedProperty = GetImpl.buildTransitiveProperty(startType, selector);
     if (!actualProperty.equals(expectedProperty)) {
       throw new AssertionError(
           "The expected propertypath does not match the actual property path of this getter:\nExpected: "

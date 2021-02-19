@@ -1,7 +1,7 @@
 package com.remondis.propertypath.api;
 
 /**
- * A get access object that applies a mapping function if the getter has a non-null return value.
+ * A get access object that applies a mapping function on the result of a getter.
  *
  * @param <I> The input object type
  * @param <O> The property type.

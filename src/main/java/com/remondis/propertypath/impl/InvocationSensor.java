@@ -1,18 +1,15 @@
 package com.remondis.propertypath.impl;
 
-import static com.remondis.propertypath.impl.ReflectionUtil.denyNoReturnType;
-import static com.remondis.propertypath.impl.ReflectionUtil.findGenericTypeFromMethod;
-import static com.remondis.propertypath.impl.ReflectionUtil.isGetterWithArgumentSupport;
-import static com.remondis.propertypath.impl.ReflectionUtil.isList;
-import static com.remondis.propertypath.impl.ReflectionUtil.isMap;
-import static com.remondis.propertypath.impl.ReflectionUtil.nullOrDefaultValue;
 import static com.remondis.propertypath.impl.exceptions.ExceptionInPropertyPath.exceptionInPropertyPath;
-import static com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException.notAValidPropertyPath;
 import static com.remondis.propertypath.impl.exceptions.ZeroInteractionException.zeroInteractions;
-import static java.util.Arrays.asList;
+import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.util.Objects.isNull;
+import static net.bytebuddy.matcher.ElementMatchers.isDeclaredBy;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,9 +23,11 @@ import com.remondis.propertypath.impl.exceptions.NotAValidPropertyPathException;
 import com.remondis.propertypath.impl.exceptions.ReflectionException;
 import com.remondis.propertypath.impl.exceptions.ZeroInteractionException;
 
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.InvocationHandler;
-import net.sf.cglib.proxy.UndeclaredThrowableException;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.description.method.MethodDescription;
+import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
+import net.bytebuddy.implementation.MethodDelegation;
+import net.bytebuddy.matcher.ElementMatcher;
 
 public class InvocationSensor<T> {
 
@@ -125,9 +124,9 @@ public class InvocationSensor<T> {
 
   }
 
-  private T proxyObject;
-
   private List<Invocation> invocations = new LinkedList<>();
+
+  private T proxyObject;
 
   private Class<T> superType;
 
@@ -136,80 +135,57 @@ public class InvocationSensor<T> {
   }
 
   private T createProxy(Class<T> superType, boolean supportTransitiveCalls) {
-    Enhancer enhancer = createProxyObject(superType, supportTransitiveCalls);
-    return superType.cast(enhancer.create());
+    return createProxyObject(invocations, superType, supportTransitiveCalls);
   }
 
-  private Enhancer createProxyObject(Class<?> superType, boolean supportTransitiveCalls) {
-    Enhancer enhancer = new Enhancer();
-    enhancer.setSuperclass(superType);
-    enhancer.setCallback(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Invocation invocation = new Invocation(method, args);
-        if (isGetterWithArgumentSupport(method)) {
-          denyNoReturnType(method);
-          // schuettec - Get property name from method and mark this property as called.
-          invocations.add(invocation);
-          if (supportTransitiveCalls) {
-            // schuettec - For getter, return a new enhancer
-            Class<?> returnType = method.getReturnType();
-            if (isMap(returnType) || isList(returnType)) {
-              // if the type is a Map then the desired type is the second type argument
-              int typeIndex = isMap(returnType) ? 1 : 0;
-              Class<?> genericType = findGenericTypeFromMethod(method, typeIndex);
-              Enhancer enhancer = createCollectionProxyObject(returnType, genericType);
-              return returnType.cast(enhancer.create());
-            } else if (ReflectionUtil.isBean(returnType)) {
-              Enhancer enhancer = createProxyObject(returnType, supportTransitiveCalls);
-              return returnType.cast(enhancer.create());
-            } else {
-              return nullOrDefaultValue(method.getReturnType());
-            }
-          } else {
-            return nullOrDefaultValue(method.getReturnType());
-          }
-        } else {
-          throw notAValidPropertyPath(superType, asList(invocation));
-        }
-      }
-
-    });
-    return enhancer;
+  protected static <T> T createProxyObject(List<Invocation> invocations, Class<T> superType,
+      boolean supportTransitiveCalls) {
+    ClassLoader classLoader;
+    if (isNull(superType) || isNull(superType.getClassLoader())) {
+      classLoader = getSystemClassLoader();
+    } else {
+      classLoader = superType.getClassLoader();
+    }
+    T po = null;
+    try {
+      po = new ByteBuddy().subclass(superType)
+          .method(isDeclaredByClassHierarchy(superType))
+          .intercept(MethodDelegation.to(new SingularInterceptor(invocations, supportTransitiveCalls, superType)))
+          .make()
+          .load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+          .getLoaded()
+          .getDeclaredConstructor()
+          .newInstance();
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+      throw new RuntimeException(
+          String.format("Error while creating proxy for class '%s'", superType.getCanonicalName()), ex);
+    }
+    return po;
   }
 
-  private Enhancer createCollectionProxyObject(Class<?> superType, Class<?> genericType) {
-    Enhancer enhancer = new Enhancer();
-    enhancer.setSuperclass(superType);
-    enhancer.setCallback(new InvocationHandler() {
-      @Override
-      public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Invocation invocation = new Invocation(method, genericType, args);
-        if (isGetterWithArgumentSupport(method)) {
-          denyNoReturnType(method);
-          // schuettec - Get property name from method and mark this property as called.
-          invocations.add(invocation);
-          // schuettec - For getter, return a new enhancer
-          Class<?> returnType = genericType;
-          if (isMap(returnType) || isList(returnType)) {
-            // if the type is a Map then the desired type is the second type argument
-            int typeIndex = isMap(returnType) ? 1 : 0;
-            Class<?> genericType = findGenericTypeFromMethod(method, typeIndex);
-            Enhancer enhancer = createCollectionProxyObject(returnType, genericType);
-            return returnType.cast(enhancer.create());
-          } else if (ReflectionUtil.isBean(returnType)) {
-            Enhancer enhancer = createProxyObject(returnType, true);
-            return returnType.cast(enhancer.create());
-          } else {
-            return nullOrDefaultValue(method.getReturnType());
-          }
-        } else {
-          throw notAValidPropertyPath(superType, asList(invocation));
-        }
-      }
-
-    });
-    return enhancer;
+  protected static Object createCollectionProxyObject(List<Invocation> invocations, Class<?> superType,
+      Class<?> genericType) {
+    ClassLoader classLoader;
+    if (isNull(superType) || isNull(superType.getClassLoader())) {
+      classLoader = getSystemClassLoader();
+    } else {
+      classLoader = superType.getClassLoader();
+    }
+    Object po = null;
+    try {
+      po = new ByteBuddy().subclass(superType)
+          .method(isDeclaredByClassHierarchy(superType))
+          .intercept(MethodDelegation.to(new PluralInterceptor(invocations, superType, genericType)))
+          .make()
+          .load(classLoader, ClassLoadingStrategy.Default.INJECTION)
+          .getLoaded()
+          .getDeclaredConstructor()
+          .newInstance();
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex) {
+      throw new RuntimeException(
+          String.format("Error while creating proxy for class '%s'", superType.getCanonicalName()), ex);
+    }
+    return po;
   }
 
   /**
@@ -289,4 +265,24 @@ public class InvocationSensor<T> {
     }
   }
 
+  /**
+   * Creates an {@link ElementMatcher.Junction} for the method description of all superclasses, interfaces and the given
+   * type itself so that all of those methods are proxied by the {@link InvocationSensor}.
+   * 
+   * @param type type to get the junction for
+   * @return the junction with all superclasses and interfaces including the given typeD
+   */
+  private static <T> ElementMatcher.Junction<MethodDescription> isDeclaredByClassHierarchy(Class<T> type) {
+    ClassHierarchyIterator classHierarchyIterator = new ClassHierarchyIterator(type);
+    ElementMatcher.Junction<MethodDescription> methodDescriptionJunction = null;
+    while (classHierarchyIterator.hasNext()) {
+      Class<?> next = classHierarchyIterator.next();
+      if (isNull(methodDescriptionJunction)) {
+        methodDescriptionJunction = isDeclaredBy(next);
+      } else {
+        methodDescriptionJunction = methodDescriptionJunction.or(isDeclaredBy(next));
+      }
+    }
+    return methodDescriptionJunction;
+  }
 }

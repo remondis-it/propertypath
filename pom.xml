@@ -123,10 +123,8 @@
 								<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 							</manifest>
 							<manifestEntries>
-								<Bundle-Vendor>REMONDIS IT Services GmbH
-									&amp; Co. KG</Bundle-Vendor>
-								<Bundle-DocURL>
-									https://github.com/remondis-it/propertypath</Bundle-DocURL>
+								<Bundle-Vendor>REMONDIS IT Services GmbH &amp; Co. KG</Bundle-Vendor>
+								<Bundle-DocURL>https://github.com/remondis-it/propertypath</Bundle-DocURL>
 								<Automatic-Module-Name>com.remondis.propertypath</Automatic-Module-Name>
 							</manifestEntries>
 						</archive>

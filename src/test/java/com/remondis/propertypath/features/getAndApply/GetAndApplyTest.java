@@ -1,13 +1,11 @@
 package com.remondis.propertypath.features.getAndApply;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-
-import org.junit.Test;
 
 import com.remondis.propertypath.api.AssertGetter;
 import com.remondis.propertypath.api.Get;
@@ -16,11 +14,12 @@ import com.remondis.propertypath.api.Getter;
 import com.remondis.propertypath.common.Address;
 import com.remondis.propertypath.common.Gender;
 import com.remondis.propertypath.common.Person;
+import org.junit.jupiter.api.Test;
 
-public class GetAndApplyTest {
+class GetAndApplyTest {
 
   @Test
-  public void shouldReturnNoValueIfFunctionReturnsNull() {
+  void shouldReturnNoValueIfFunctionReturnsNull() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));
 
@@ -33,7 +32,7 @@ public class GetAndApplyTest {
   }
 
   @Test
-  public void shouldReturnValueIfFunctionReturnsStaticValue() {
+  void shouldReturnValueIfFunctionReturnsStaticValue() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));
 
@@ -49,7 +48,7 @@ public class GetAndApplyTest {
   }
 
   @Test
-  public void shouldAssertHappyPath() {
+  void shouldAssertHappyPath() {
     GetAndApply<Person, String, Integer, RuntimeException> getter = Getter.newFor(Person.class)
         .evaluate(p -> p.getAddress()
             .getStreet())
@@ -61,7 +60,7 @@ public class GetAndApplyTest {
   }
 
   @Test
-  public void shouldFailOnNotMatchingPropertyPath() {
+  void shouldFailOnNotMatchingPropertyPath() {
     GetAndApply<Person, String, Integer, RuntimeException> getAndApply = Getter.newFor(Person.class)
         .evaluate(p -> p.getAddress()
             .getStreet())
@@ -69,11 +68,12 @@ public class GetAndApplyTest {
 
     assertThatThrownBy(() -> AssertGetter.of(getAndApply)
         .assertGetter(p -> p.getAddress()
-            .getHouseNumber())).isInstanceOf(AssertionError.class);
+            .getHouseNumber()))
+        .isInstanceOf(AssertionError.class);
   }
 
   @Test
-  public void shouldGetAndApply() {
+  void shouldGetAndApply() {
     String expectedStreet = "street";
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address(expectedStreet, "houseNumber", "zipCode", "city"));
@@ -90,7 +90,7 @@ public class GetAndApplyTest {
   }
 
   @Test
-  public void shouldNotApplyFunctionIfNull_1() {
+  void shouldNotApplyFunctionIfNull_1() {
     Person person = new Person("forename", "name", 30, Gender.W, new Address(null, "houseNumber", "zipCode", "city"));
 
     Optional<Integer> optStringLength = Getter.newFor(Person.class)
@@ -103,7 +103,7 @@ public class GetAndApplyTest {
   }
 
   @Test
-  public void shouldNotApplyFunctionIfNull_2() {
+  void shouldNotApplyFunctionIfNull_2() {
     Person person = new Person("forename", "name", 30, Gender.W, null);
 
     Optional<Integer> optStringLength = Getter.newFor(Person.class)

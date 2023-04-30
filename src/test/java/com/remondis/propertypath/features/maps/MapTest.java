@@ -1,14 +1,8 @@
 package com.remondis.propertypath.features.maps;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Optional;
-
-import org.junit.Test;
 
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.Getter;
@@ -17,21 +11,29 @@ import com.remondis.propertypath.common.B;
 import com.remondis.propertypath.common.C;
 import com.remondis.propertypath.common.DummyException;
 import com.remondis.propertypath.impl.PropertyPathException;
+import org.junit.jupiter.api.Test;
 
-public class MapTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-  @Test(expected = PropertyPathException.class)
-  public void shouldSuppotGetOrDefault() throws DummyException {
-    C c3 = new C("string3");
-    Getter.newFor(A.class)
-        .evaluate(al -> al.getB()
-            .getcMap()
-            .getOrDefault("three", c3)
-            .getString());
+class MapTest {
+
+  @Test
+  void shouldSuppotGetOrDefault() {
+    assertThrows(PropertyPathException.class, () -> {
+      C c3 = new C("string3");
+      Getter.newFor(A.class)
+          .evaluate(al -> al.getB()
+              .getcMap()
+              .getOrDefault("three", c3)
+              .getString());
+    });
   }
 
   @Test
-  public void shouldHandleNoSuchElementInMap() throws DummyException {
+  void shouldHandleNoSuchElementInMap() throws DummyException {
     Map<String, C> map = new Hashtable<>();
     map.put("one", new C("string1"));
     map.put("two", new C("string2"));
@@ -47,7 +49,7 @@ public class MapTest {
   }
 
   @Test
-  public void shouldHandleNullMap() throws DummyException {
+  void shouldHandleNullMap() throws DummyException {
     A a = new A(new B());
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
         .evaluate(al -> al.getB()
@@ -59,7 +61,7 @@ public class MapTest {
   }
 
   @Test
-  public void shouldGetFromMap() throws DummyException {
+  void shouldGetFromMap() throws DummyException {
     Map<String, C> map = new Hashtable<>();
     map.put("one", new C("string1"));
     map.put("two", new C("string2"));

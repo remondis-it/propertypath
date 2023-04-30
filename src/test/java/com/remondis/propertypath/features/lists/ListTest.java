@@ -1,13 +1,11 @@
 package com.remondis.propertypath.features.lists;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
-
-import org.junit.Test;
 
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.Getter;
@@ -15,11 +13,12 @@ import com.remondis.propertypath.common.A;
 import com.remondis.propertypath.common.B;
 import com.remondis.propertypath.common.C;
 import com.remondis.propertypath.common.DummyException;
+import org.junit.jupiter.api.Test;
 
-public class ListTest {
+class ListTest {
 
   @Test
-  public void shouldHandleNoSuchElementInList() throws DummyException {
+  void shouldHandleNoSuchElementInList() throws DummyException {
     A a = new A(new B(asList(new C("string1"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
         .evaluate(al -> al.getB()
@@ -31,7 +30,7 @@ public class ListTest {
   }
 
   @Test
-  public void shouldHandleNullList() throws DummyException {
+  void shouldHandleNullList() throws DummyException {
     A a = new A(new B());
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
         .evaluate(al -> al.getB()
@@ -43,7 +42,7 @@ public class ListTest {
   }
 
   @Test
-  public void shouldGetFromList() throws DummyException {
+  void shouldGetFromList() throws DummyException {
     A a = new A(new B(asList(new C("string1"), new C("string2"))));
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
         .evaluate(al -> al.getB()

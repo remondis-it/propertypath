@@ -1,19 +1,18 @@
 package com.remondis.propertypath.features.asString;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import com.remondis.propertypath.api.Get;
 import com.remondis.propertypath.api.Getter;
 import com.remondis.propertypath.common.A;
 import com.remondis.propertypath.common.B;
 import com.remondis.propertypath.common.DummyException;
+import org.junit.jupiter.api.Test;
 
-public class AsStringTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class AsStringTest {
 
   @Test
-  public void shouldReturnPropertyPathAsString() {
+  void shouldReturnPropertyPathAsString() {
     Get<A, String, DummyException> getC0 = Getter.newFor(A.class)
         .evaluate(a1 -> a1.getB()
             .getCs()
@@ -23,7 +22,7 @@ public class AsStringTest {
   }
 
   @Test
-  public void shouldReturnPropertyPathAsStringStartWithList() {
+  void shouldReturnPropertyPathAsStringStartWithList() {
     String path = Getter.newFor(B.class)
         .evaluate(b -> b.getCs()
             .get(99)

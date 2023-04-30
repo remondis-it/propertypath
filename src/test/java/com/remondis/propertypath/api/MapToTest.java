@@ -1,20 +1,20 @@
 package com.remondis.propertypath.api;
 
+import org.junit.jupiter.api.Test;
+
 import static com.remondis.propertypath.api.MapTo.nullIfEmpty;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
-
-public class MapToTest {
+class MapToTest {
   @Test
-  public void shouldMapToNull() {
+  void shouldMapToNull() {
     assertNull(nullIfEmpty().apply(""));
     assertNull(nullIfEmpty().apply(null));
   }
 
   @Test
-  public void shouldNotMapToNull() {
+  void shouldNotMapToNull() {
     assertNotNull(nullIfEmpty().apply(" "));
     assertNotNull(nullIfEmpty().apply("abc"));
   }

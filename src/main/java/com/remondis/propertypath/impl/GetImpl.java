@@ -23,8 +23,13 @@ public final class GetImpl<I, O, E extends Exception> implements Get<I, O, E> {
   }
 
   @Override
+  public <X> GetAndApply<I, O, X, E> andApplyIfPresent(Function<O, X> mapping) {
+    return new GetAndApplyImpl<I, O, X, E>(this, mapping, true);
+  }
+
+  @Override
   public <X> GetAndApply<I, O, X, E> andApply(Function<O, X> mapping) {
-    return new GetAndApplyImpl<I, O, X, E>(this, mapping);
+    return new GetAndApplyImpl<I, O, X, E>(this, mapping, false);
   }
 
   @Override

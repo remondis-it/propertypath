@@ -92,10 +92,8 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
         Optional<PropertyDescriptor> property = Properties.getProperties(currentType)
             .stream()
             .filter(pd -> nonNull(pd.getReadMethod()))
-            .filter(pd -> {
-              return pd.getReadMethod()
-                  .equals(invocation.getMethod());
-            })
+            .filter(pd -> pd.getReadMethod()
+                .equals(invocation.getMethod()))
             .findFirst();
         // check, if the current invocation points to a valid property
         valid = property.isPresent();
@@ -110,7 +108,7 @@ class TypedTransitiveProperty<T, R, E extends Exception> {
         throw notAValidPropertyPath(sensorType, trackedInvocations);
       }
     } while (iterator.hasNext() && valid);
-    return new TypedTransitiveProperty<T, R, E>(sensorType, returnValue, trackedInvocations);
+    return new TypedTransitiveProperty<>(sensorType, returnValue, trackedInvocations);
   }
 
   @Override

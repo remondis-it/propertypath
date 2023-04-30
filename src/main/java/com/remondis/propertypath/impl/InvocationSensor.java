@@ -235,7 +235,7 @@ public class InvocationSensor<T> {
   public static <R, T, E extends Exception> TypedTransitiveProperty<T, R, E> getTransitiveTypedProperty(
       Class<T> sensorType, PropertyPath<R, T, E> selector)
       throws ZeroInteractionException, ExceptionInPropertyPath, NotAValidPropertyPathException {
-    InvocationSensor<T> invocationSensor = new InvocationSensor<T>(sensorType);
+    InvocationSensor<T> invocationSensor = new InvocationSensor<>(sensorType);
     T sensor = invocationSensor.getSensor(true);
     // perform the selector lambda on the sensor
     try {

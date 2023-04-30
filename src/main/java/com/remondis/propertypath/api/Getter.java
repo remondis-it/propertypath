@@ -37,9 +37,9 @@ public final class Getter {
    * @param startType The type to evaluate a property path on.
    * @return Returns a builder for further configuration.
    */
-  public static <I, O> GetBuilder<I> newFor(Class<I> startType) {
+  public static <I> GetBuilder<I> newFor(Class<I> startType) {
     requireNonNull(startType, "Type must not be null.");
-    return new GetBuilderImpl<I>(startType);
+    return new GetBuilderImpl<>(startType);
   }
 
 }

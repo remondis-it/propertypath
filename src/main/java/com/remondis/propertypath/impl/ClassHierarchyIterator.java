@@ -29,7 +29,7 @@ public class ClassHierarchyIterator implements Iterator<Class<?>> {
 
   @Override
   public boolean hasNext() {
-    return remaining.size() > 0;
+    return !remaining.isEmpty();
   }
 
   @Override

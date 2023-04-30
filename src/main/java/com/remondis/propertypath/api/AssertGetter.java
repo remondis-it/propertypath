@@ -17,7 +17,7 @@ public class AssertGetter {
    * @return Returns a builder for further configuration.
    */
   public static <I, O, E extends Exception> AssertGetterBuilder<I, O, E> of(Get<I, O, E> getter) {
-    return new AssertGetterBuilderImpl<I, O, O, E>(getter);
+    return new AssertGetterBuilderImpl<>(getter);
   }
 
   /**
@@ -28,6 +28,6 @@ public class AssertGetter {
    */
   public static <I, O, T, E extends Exception> AssertGetterAndApplyBuilder<I, O, T, E> of(
       GetAndApply<I, O, T, E> getter) {
-    return new AssertGetterBuilderImpl<I, O, T, E>(getter);
+    return new AssertGetterBuilderImpl<>(getter);
   }
 }

@@ -235,7 +235,7 @@ public class InvocationSensor<T> {
   public static <R, T, E extends Exception> TypedTransitiveProperty<T, R, E> getTransitiveTypedProperty(
       Class<T> sensorType, PropertyPath<R, T, E> selector)
       throws ZeroInteractionException, ExceptionInPropertyPath, NotAValidPropertyPathException {
-    InvocationSensor<T> invocationSensor = new InvocationSensor<T>(sensorType);
+    InvocationSensor<T> invocationSensor = new InvocationSensor<>(sensorType);
     T sensor = invocationSensor.getSensor(true);
     // perform the selector lambda on the sensor
     try {
@@ -268,7 +268,7 @@ public class InvocationSensor<T> {
   /**
    * Creates an {@link ElementMatcher.Junction} for the method description of all superclasses, interfaces and the given
    * type itself so that all of those methods are proxied by the {@link InvocationSensor}.
-   * 
+   *
    * @param type type to get the junction for
    * @return the junction with all superclasses and interfaces including the given typeD
    */

@@ -30,7 +30,7 @@ class ReflectionUtil {
   static {
     // schuettec - 08.02.2017 : According to the spec:
     // https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html
-    Map<Class<?>, Object> map = new HashMap<Class<?>, Object>();
+    Map<Class<?>, Object> map = new HashMap<>();
     map.put(boolean.class, false);
     map.put(char.class, '\0');
     map.put(byte.class, (byte) 0);

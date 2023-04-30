@@ -1,13 +1,11 @@
 package com.remondis.propertypath.api;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.junit.Test;
 
 import com.remondis.propertypath.common.A;
 import com.remondis.propertypath.common.Address;
@@ -16,11 +14,12 @@ import com.remondis.propertypath.common.C;
 import com.remondis.propertypath.common.DummyException;
 import com.remondis.propertypath.common.Gender;
 import com.remondis.propertypath.common.Person;
+import org.junit.jupiter.api.Test;
 
-public class GetTest {
+class GetTest {
 
   @Test
-  public void shouldGet() {
+  void shouldGet() {
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", "city"));
 
@@ -34,7 +33,7 @@ public class GetTest {
   }
 
   @Test
-  public void shouldSupportExceptions() throws DummyException {
+  void shouldSupportExceptions() {
     A a = new A(new BThrowing());
     Get<A, List<C>, DummyException> getCs = Getter.newFor(A.class)
         .evaluate(al -> al.getB()

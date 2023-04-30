@@ -1,19 +1,18 @@
 package com.remondis.propertypath.features.nullOrDefault;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 import com.remondis.propertypath.api.Getter;
 import com.remondis.propertypath.common.Address;
 import com.remondis.propertypath.common.Gender;
 import com.remondis.propertypath.common.Person;
+import org.junit.jupiter.api.Test;
 
-public class NullOrDefaultTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+class NullOrDefaultTest {
 
   @Test
-  public void shouldReturnNullAsDefaultValue() {
+  void shouldReturnNullAsDefaultValue() {
     Person person = new Person("forename", "name", 30, Gender.W, null);
     String city = Getter.newFor(Person.class)
         .evaluate(p -> p.getAddress()
@@ -23,7 +22,7 @@ public class NullOrDefaultTest {
   }
 
   @Test
-  public void shouldReturnDefaultValue() {
+  void shouldReturnDefaultValue() {
     Person person = new Person("forename", "name", 30, Gender.W, new Address("street", "houseNumber", "zipCode", null));
     String expectedDefault = "cityDefault";
     String city = Getter.newFor(Person.class)
@@ -34,7 +33,7 @@ public class NullOrDefaultTest {
   }
 
   @Test
-  public void shouldNotReturnDefaultValue() {
+  void shouldNotReturnDefaultValue() {
     String expectedCity = "city";
     Person person = new Person("forename", "name", 30, Gender.W,
         new Address("street", "houseNumber", "zipCode", expectedCity));

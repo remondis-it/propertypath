@@ -1,20 +1,19 @@
 package com.remondis.propertypath.showcase;
 
 import static java.util.Objects.nonNull;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
-
 import com.remondis.propertypath.api.Getter;
+import org.junit.jupiter.api.Test;
 
-public class Showcase {
+class Showcase {
 
   @Test
-  public void showcase() {
+  void showcase() {
 
     Address address1 = new Address("street1", "houseNumber1", "zipCode1", "city1");
     Address address2 = new Address("street2", "houseNumber2", "zipCode2", "city2");

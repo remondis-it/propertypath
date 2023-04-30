@@ -19,7 +19,7 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
 
   @Override
   public GetWithoutException<I, T> toJdk8() {
-    return new GetWithoutExceptionImpl<I, T>(this);
+    return new GetWithoutExceptionImpl<>(this);
   }
 
   Get<I, O, E> getGetter() {
@@ -52,7 +52,7 @@ public class GetAndApplyImpl<I, O, T, E extends Exception> implements GetAndAppl
 
   @Override
   public <X> GetAndApply<I, T, X, E> andApply(Function<T, X> mapping) {
-    return new GetAndApplyImpl<I, T, X, E>(this, mapping);
+    return new GetAndApplyImpl<>(this, mapping);
   }
 
   @Override

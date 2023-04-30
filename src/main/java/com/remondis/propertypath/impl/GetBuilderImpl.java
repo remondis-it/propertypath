@@ -17,7 +17,7 @@ public class GetBuilderImpl<I> implements GetBuilder<I> {
   @Override
   public <O, E extends Exception> Get<I, O, E> evaluate(PropertyPath<O, I, E> selector) {
     requireNonNull(selector, "Property path must not be null.");
-    return new GetImpl<I, O, E>(startType, selector);
+    return new GetImpl<>(startType, selector);
   }
 
 }
